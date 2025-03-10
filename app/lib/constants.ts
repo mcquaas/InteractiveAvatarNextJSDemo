@@ -1,15 +1,7 @@
 export const AVATARS = [
   {
     avatar_id: "Ann_Therapist_public",
-    name: "Ann Therapist",
-  },
-  {
-    avatar_id: "Shawn_Therapist_public",
-    name: "Shawn Therapist",
-  },
-  {
-    avatar_id: "Bryan_FitnessCoach_public",
-    name: "Bryan Fitness Coach",
+    name: "Terapeuta Ana",
   },
   {
     avatar_id: "Dexter_Doctor_Standing2_public",
@@ -17,7 +9,11 @@ export const AVATARS = [
   },
   {
     avatar_id: "Elenora_IT_Sitting_public",
-    name: "Elenora Tech Expert",
+    name: "Asistente Elenora",
+  },
+  {
+    avatar_id: "Dexter_Doctor_Sitting2_public",
+    name: "Doctor Sami"
   },
 ];
 

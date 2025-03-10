@@ -30,9 +30,9 @@ export default function InteractiveAvatar() {
   const [isLoadingRepeat, setIsLoadingRepeat] = useState(false);
   const [stream, setStream] = useState<MediaStream>();
   const [debug, setDebug] = useState<string>();
-  const [knowledgeId, setKnowledgeId] = useState<string>("");
-  const [avatarId, setAvatarId] = useState<string>("");
-  const [language, setLanguage] = useState<string>('en');
+  const [knowledgeId, setKnowledgeId] = useState<string>("327535850dab45ada97514c405a8258c");
+  const [avatarId, setAvatarId] = useState<string>("Dexter_Doctor_Sitting2_public");
+  const [language, setLanguage] = useState<string>('es');
 
   const [data, setData] = useState<StartAvatarResponse>();
   const [text, setText] = useState<string>("");
@@ -91,18 +91,12 @@ export default function InteractiveAvatar() {
       const res = await avatar.current.createStartAvatar({
         quality: AvatarQuality.Low,
         avatarName: avatarId,
-        knowledgeId: knowledgeId, // Or use a custom `knowledgeBase`.
+        knowledgeId: knowledgeId,
         voice: {
-          rate: 1.5, // 0.5 ~ 1.5
+          rate: 1.0,
           emotion: VoiceEmotion.EXCITED,
-          // elevenlabsSettings: {
-          //   stability: 1,
-          //   similarity_boost: 1,
-          //   style: 1,
-          //   use_speaker_boost: false,
-          // },
         },
-        language: language,
+        language: 'es',
         disableIdleTimeout: true,
       });
 
@@ -188,98 +182,73 @@ export default function InteractiveAvatar() {
   return (
     <div className="w-full flex flex-col gap-4">
       <Card>
-        <CardBody className="h-[500px] flex flex-col justify-center items-center">
+        <CardBody className="h-[600px] flex flex-col justify-center items-center">
           {stream ? (
-            <div className="h-[500px] w-[900px] justify-center items-center flex rounded-lg overflow-hidden">
-              <video
-                ref={mediaStream}
-                autoPlay
-                playsInline
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "contain",
-                }}
-              >
-                <track kind="captions" />
-              </video>
-              <div className="flex flex-col gap-2 absolute bottom-3 right-3">
-                <Button
-                  className="bg-gradient-to-tr from-indigo-500 to-indigo-300 text-white rounded-lg"
-                  size="md"
-                  variant="shadow"
-                  onClick={handleInterrupt}
+            <div className="flex flex-col">
+              <div className="h-[500px] w-[850px] justify-center items-center flex rounded-lg gap-8 overflow-hidden">
+                <video
+                  ref={mediaStream}
+                  autoPlay
+                  playsInline
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "contain",
+                  }}
                 >
-                  Interrupt task
-                </Button>
-                <Button
-                  className="bg-gradient-to-tr from-indigo-500 to-indigo-300  text-white rounded-lg"
-                  size="md"
-                  variant="shadow"
-                  onClick={endSession}
+                  <track kind="captions" />
+                </video>
+              </div>
+              <div className="flex flex-row justify-between items-center mt-4">
+                <Tabs
+                  aria-label="Options"
+                  selectedKey={chatMode}
+                  onSelectionChange={(v) => {
+                    handleChangeChatMode(v);
+                  }}
                 >
-                  End session
-                </Button>
+                  <Tab key="text_mode" title="Modo texto" />
+                  <Tab key="voice_mode" title="Modo voz" />
+                </Tabs>
+                <div className="flex flex-row gap-2">
+                  <Button
+                    className="bg-[#1d46ad] text-white rounded-lg"
+                    size="md"
+                    variant="shadow"
+                    onClick={handleInterrupt}
+                  >
+                    Interrumpir tarea
+                  </Button>
+                  <Button
+                    className="bg-[#1d46ad] text-white rounded-lg"
+                    size="md"
+                    variant="shadow"
+                    onClick={endSession}
+                  >
+                    Finalizar sesión
+                  </Button>
+                </div>
               </div>
             </div>
           ) : !isLoadingSession ? (
             <div className="h-full justify-center items-center flex flex-col gap-8 w-[500px] self-center">
               <div className="flex flex-col gap-2 w-full">
                 <p className="text-sm font-medium leading-none">
-                  Custom Knowledge ID (optional)
+                  ID de Expediente
                 </p>
                 <Input
-                  placeholder="Enter a custom knowledge ID"
+                  placeholder="Ingresa UUID de expediente"
                   value={knowledgeId}
                   onChange={(e) => setKnowledgeId(e.target.value)}
                 />
-                <p className="text-sm font-medium leading-none">
-                  Custom Avatar ID (optional)
-                </p>
-                <Input
-                  placeholder="Enter a custom avatar ID"
-                  value={avatarId}
-                  onChange={(e) => setAvatarId(e.target.value)}
-                />
-                <Select
-                  placeholder="Or select one from these example avatars"
-                  size="md"
-                  onChange={(e) => {
-                    setAvatarId(e.target.value);
-                  }}
-                >
-                  {AVATARS.map((avatar) => (
-                    <SelectItem
-                      key={avatar.avatar_id}
-                      textValue={avatar.avatar_id}
-                    >
-                      {avatar.name}
-                    </SelectItem>
-                  ))}
-                </Select>
-                <Select
-                  label="Select language"
-                  placeholder="Select language"
-                  className="max-w-xs"
-                  selectedKeys={[language]}
-                  onChange={(e) => {
-                    setLanguage(e.target.value);
-                  }}
-                >
-                  {STT_LANGUAGE_LIST.map((lang) => (
-                    <SelectItem key={lang.key}>
-                      {lang.label}
-                    </SelectItem>
-                  ))}
-                </Select>
               </div>
               <Button
-                className="bg-gradient-to-tr from-indigo-500 to-indigo-300 w-full text-white"
+                className="bg-[#1d46ad] w-full text-white"
                 size="md"
                 variant="shadow"
                 onClick={startSession}
               >
-                Start session
+                Iniciar consulta
               </Button>
             </div>
           ) : (
@@ -288,47 +257,39 @@ export default function InteractiveAvatar() {
         </CardBody>
         <Divider />
         <CardFooter className="flex flex-col gap-3 relative">
-          <Tabs
-            aria-label="Options"
-            selectedKey={chatMode}
-            onSelectionChange={(v) => {
-              handleChangeChatMode(v);
-            }}
-          >
-            <Tab key="text_mode" title="Text mode" />
-            <Tab key="voice_mode" title="Voice mode" />
-          </Tabs>
-          {chatMode === "text_mode" ? (
-            <div className="w-full flex relative">
-              <InteractiveAvatarTextInput
-                disabled={!stream}
-                input={text}
-                label="Chat"
-                loading={isLoadingRepeat}
-                placeholder="Type something for the avatar to respond"
-                setInput={setText}
-                onSubmit={handleSpeak}
-              />
-              {text && (
-                <Chip className="absolute right-16 top-3">Listening</Chip>
-              )}
-            </div>
-          ) : (
-            <div className="w-full text-center">
-              <Button
-                isDisabled={!isUserTalking}
-                className="bg-gradient-to-tr from-indigo-500 to-indigo-300 text-white"
-                size="md"
-                variant="shadow"
-              >
-                {isUserTalking ? "Listening" : "Voice chat"}
-              </Button>
-            </div>
-          )}
+          <div className="mt-4 w-full">
+            {chatMode === "text_mode" ? (
+              <div className="w-full flex relative">
+                <InteractiveAvatarTextInput
+                  disabled={!stream}
+                  input={text}
+                  label="Chat"
+                  loading={isLoadingRepeat}
+                  placeholder="Escribe algo para el Dr."
+                  setInput={setText}
+                  onSubmit={handleSpeak}
+                />
+                {text && (
+                  <Chip className="absolute right-16 top-3">Escuchando</Chip>
+                )}
+              </div>
+            ) : (
+              <div className="w-full text-center">
+                <Button
+                  isDisabled={!isUserTalking}
+                  className="bg-[#1d46ad] text-white"
+                  size="md"
+                  variant="shadow"
+                >
+                  {isUserTalking ? "Escuchando" : "Chat de voz"}
+                </Button>
+              </div>
+            )}
+          </div>
         </CardFooter>
       </Card>
       <p className="font-mono text-right">
-        <span className="font-bold">Console:</span>
+        <span className="font-bold">Consola:</span>
         <br />
         {debug}
       </p>
